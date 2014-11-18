@@ -59,9 +59,10 @@
         output = document.getElementById("output");
     }
 
-    function send_echo() {
+    function send_request() {
 
         websocket = new WebSocket(wsUri);
+        
         websocket.onopen = function (evt) {
             onOpen(evt)
         };
@@ -81,7 +82,13 @@
     }
 
     function onMessage(evt) {
-        writeToScreen("RECEIVED: " + evt.data);
+        if (evt.data instanceof Blob) {
+            var arrayBuffer;
+            var fileReader = new FileReader();
+            var blob = new Blob([evt.data]);
+            fileReader.readAsArrayBuffer(blob);
+            writeToScreen("RECEIVED: " + evt.data);
+        }
     }
 
     function onError(evt) {
@@ -105,15 +112,21 @@
 
 </script>
 
-<h2 style="text-align: center;">WebSocket Echo Client</h2>
+<h2 style="text-align: center;">WebSocket File Transfer Client</h2>
 
 <br></br>
 
 <div style="text-align: center;">
     <form action="">
-        <input onclick="send_echo()" value="Press me" type="button">
-        <input id="textID" name="message" value="Hello WebSocket!" type="text"><br>
+        <input onclick="send_request()" value="Get file" type="button">
+        <input id="textID" name="message" value="Enter a filename" type="text"><br>
     </form>
+    <!--
+    <form action="">
+        <input onclick="send_file()" value="Send file" type="button">
+        <input id="textID" name="message" value="Enter a filename" type="text"><br>
+    </form>
+    -->
 </div>
 <div id="output"></div>
 </body>
