@@ -44,6 +44,7 @@ public class FileEndpoint {
                 out.write(bArray);
                 read = in.read(bArray);
             }
+            out.flush();
         } catch (Exception e) {
             return e.getMessage();
         }

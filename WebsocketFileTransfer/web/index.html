@@ -82,13 +82,19 @@
     }
 
     function onMessage(evt) {
-        if (evt.data instanceof Blob) {
-            var arrayBuffer;
-            var fileReader = new FileReader();
-            var blob = new Blob([evt.data]);
-            fileReader.readAsArrayBuffer(blob);
-            writeToScreen("RECEIVED: " + evt.data);
+        var arrayBuffer;
+        var fileReader = new FileReader();
+
+        blob = new Blob([evt.data], {type: 'application/octet-binary'});
+
+        fileReader.onload = function () {
+            window.location=fileReader.result;
         }
+
+        if (blob) {
+            fileReader.readAsDataURL(blob);
+        }
+        writeToScreen("RECEIVED: " + blob);
     }
 
     function onError(evt) {
